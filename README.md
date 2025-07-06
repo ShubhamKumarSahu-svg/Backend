@@ -193,3 +193,108 @@ Logs out the authenticated user by blacklisting the current JWT token and cleari
 - Passwords are securely hashed before storage.
 
 For any questions or issues, please contact the API maintainer.
+
+---
+
+# Captain API Documentation
+
+This section documents all endpoints related to captains, including registration and management. Each endpoint is described with its purpose, request/response structure, and status codes.
+
+## Captain Object Structure
+
+The `captain` object returned by the API contains the following fields:
+
+| Field          | Type   | Description                                 |
+| -------------- | ------ | ------------------------------------------- |
+| `_id`          | String | Unique identifier for the captain (MongoDB) |
+| `fullname`     | Object | Captain's full name                         |
+| └─ `firstname` | String | First name (min 3 chars, required)          |
+| └─ `lastname`  | String | Last name (min 3 chars, optional)           |
+| `email`        | String | Captain's email address (unique, required)  |
+| `password`     | String | Hashed password (never returned)            |
+| `vehicle`      | Object | Vehicle details                             |
+| └─ `color`     | String | Vehicle color (required)                    |
+| └─ `plate`     | String | Vehicle plate number (required)             |
+| └─ `capacity`  | Number | Vehicle capacity (required)                 |
+| └─ `type`      | String | Vehicle type (required)                     |
+
+> **Note:** Password is never returned in API responses.
+
+---
+
+## 1. Register a New Captain
+
+### Endpoint
+
+`POST /captains/register`
+
+### Overview
+
+Register a new captain by providing personal and vehicle details. On success, returns the created captain object.
+
+### Request Body
+
+```
+{
+  "fullname": {
+    "firstname": "string (min 3 chars, required)",
+    "lastname": "string (min 3 chars, optional)"
+  },
+  "email": "string (valid email, required)",
+  "password": "string (min 6 chars, required)",
+  "vehicle": {
+    "color": "string (required)",
+    "plate": "string (required)",
+    "capacity": number (required),
+    "type": "string (required)"
+  }
+}
+```
+
+#### Example
+
+```
+{
+  "fullname": { "firstname": "Alice", "lastname": "Smith" },
+  "email": "alice.smith@example.com",
+  "password": "securepass",
+  "vehicle": {
+    "color": "Red",
+    "plate": "XYZ1234",
+    "capacity": 4,
+    "type": "Sedan"
+  }
+}
+```
+
+### Responses
+
+- **201 Created**: Captain registered successfully.
+  ```json
+  {
+    "captain": {
+      "_id": "<captain_id>",
+      "fullname": { "firstname": "Alice", "lastname": "Smith" },
+      "email": "alice.smith@example.com",
+      "vehicle": {
+        "color": "Red",
+        "plate": "XYZ1234",
+        "capacity": 4,
+        "type": "Sedan"
+      }
+    }
+  }
+  ```
+- **400 Bad Request**: Validation error or missing fields.
+- **500 Internal Server Error**: Server error.
+
+---
+
+## General Notes (Captain)
+
+- All endpoints return JSON responses.
+- Use HTTPS in production for security.
+- Passwords are securely hashed before storage.
+- Email must be unique for each captain.
+
+For any questions or issues, please contact the API maintainer.
