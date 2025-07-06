@@ -16,8 +16,6 @@ The `user` object returned by the API contains the following fields:
 | └─ `lastname`  | String | Last name (min 3 chars, optional)           |
 | `email`        | String | User's email address (unique, required)     |
 | `socketId`     | String | (Optional) Socket.io session ID             |
-| `createdAt`    | Date   | (If enabled) User creation timestamp        |
-| `updatedAt`    | Date   | (If enabled) Last update timestamp          |
 
 > **Note:** Password is never returned in API responses.
 
